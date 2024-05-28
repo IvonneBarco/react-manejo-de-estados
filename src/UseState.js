@@ -10,24 +10,44 @@ function UseState({ name }) {
     const [state, setState] = React.useState({
         value: '',
         error: false,
-        loading: false
+        loading: false,
+        deleted: false,
+        confirmed: false,
     });
 
-    console.log(state);
+    const onConfirm = () => {
+        setState({ ...state, confirmed: true, loading: false, error: false });
+    }
+
+    const onWrite = (newValue) => {
+        setState({ ...state, value: newValue });
+    }
+    const onError = () => {
+        setState({ ...state, error: true, loading: false });
+    }
+
+    const onCheck = () => {
+        setState({ ...state, loading: true });
+    }
+
+    const onDelete = () => {
+        setState({ ...state, deleted: true })
+    }
+
+    const onReset = () => {
+        setState({ ...state, confirmed: false, deleted: false, value: "" })
+    }
     React.useEffect(() => {
         console.log('Empezando el efecto');
 
-        if (state.loading) {
+        if (!!state.loading) {
             setTimeout(() => {
                 console.log('Iniciando validación');
                 if (state.value === SECURITY_CODE) {
-                    setState({ ...state, loading: false, error: false });
-                    // setLoading(false)
-                    // setError(false);
+                    onConfirm();
                 } else {
-                    setState({ ...state, loading: false, error: true });
+                    onError();
                 }
-
 
                 console.log('Terminando validación');
             }, 3000);
@@ -36,32 +56,64 @@ function UseState({ name }) {
         console.log('Terminando el efecto');
     }, [state.loading]);
 
-    return (
-        <div>
-            <h2>Eliminar {name}</h2>
+    if (!state.deleted && !state.confirmed) {
+        return (
+            <div>
+                <h2>Eliminar {name}</h2>
 
-            <p>Por favor, escribe el código de seguridad.</p>
+                <p>Por favor, escribe el código de seguridad.</p>
 
-            {(state.error && !state.loading) && (
-                <p>Error: el código es incorrecto</p>
-            )}
+                {(state.error && !state.loading) && (
+                    <p>Error: el código es incorrecto</p>
+                )}
 
-            {state.loading && (
-                <p>Cargando...</p>
-            )}
+                {state.loading && (
+                    <p>Cargando...</p>
+                )}
 
-            <input type="text" placeholder='Código de Seguridad' value={state.value} onChange={(event) => {
-                setState({ ...state, value: event.target.value });
-            }} />
-            <button
-                onClick={() => {
-                    setState({ ...state, loading: true });
-                }}
-            >
-                Comprobar
-            </button>
-        </div>
-    );
+                <input
+                    type="text"
+                    placeholder='Código de Seguridad'
+                    value={state.value}
+                    onChange={(event) => {
+                        onWrite(event.target.value);
+                    }}
+                />
+                <button
+                    onClick={() => { onCheck() }}
+                >
+                    Comprobar
+                </button>
+            </div>
+        );
+    } else if (!!state.confirmed && !state.deleted) {
+        return (
+            <React.Fragment>
+                <p>Pedimos confirmación. ¿Estás seguro?</p>
+                <button
+                    onClick={() => { onDelete(); }}
+                >
+                    Si, eliminar
+                </button>
+                <button
+                    onClick={() => { onReset(); }}
+                >
+                    No, ya no XD
+                </button>
+            </React.Fragment>
+        );
+    } else {
+        return (
+            <React.Fragment>
+                <p>Eliminado con exito</p>
+                <button
+                    onClick={() => { onReset(); }}
+                >
+                    Resetear, volver atrás
+                </button>
+            </React.Fragment>
+        );
+    }
 }
 
 export { UseState };
