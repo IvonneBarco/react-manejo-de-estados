@@ -97,3 +97,6 @@ const reducer = (state, action) => {
     }
 }
 ```
+
+# CLASE 14: Estados declarativos
+Se realiza la implemntación del UseReducer, reemplazando todas las funciones declarativas, por la función `dispatch()` enviando la `action(type, payload)`
