@@ -29,3 +29,71 @@ consiste en abstraer los cambios de estado a funciones o métodos que nos permit
 3. El reducer define los posibles estados por donde pasara nuestra App.
 4. Con action type elegimos cual de esos estados queremos disponer con el cambio o evento del usuario.
 5. Con action payload damos dinamismo a dicho estado. Será el mismo estado pero le daremos características especiales
+
+# CLASE 13: 3 formas de crear un reducer
+1. Reducer con condiciona `if`
+```
+const reducerIf = (state, action) => {
+    if (action.type === 'ERROR') {
+        return {
+            ...state,
+            error: true,
+            loading: false,
+        };
+    } else if (action.type === 'CHECK') {
+        return {
+            ...state,
+            loading: true,
+        };
+    } else {
+        return {
+            ...initialState
+        }
+    }
+}
+```
+2. Reducer con `switch`
+```
+const reducerSwitch = (state, action) => {
+
+    switch (action.type) {
+        case 'ERROR':
+            return {
+                ...state,
+                error: true,
+                loading: false,
+            };
+        case 'CHECK':
+            return {
+                ...state,
+                loading: true,
+            };
+        default:
+            return {
+                ...state
+            }
+    }
+}
+```
+1. Recucer con `ReducerObject`
+```
+   const reducerObject = (state) => ({
+    'ERROR': {
+        ...state,
+        error: true,
+        loading: false,
+    },
+    'CHECK': {
+        ...state,
+        loading: true
+    }
+})
+
+const reducer = (state, action) => {
+    if (reducerObject(state)[action.type]) {
+        return reducerObject(state)[action.type];
+    } else {
+        return state;
+    }
+}
+```

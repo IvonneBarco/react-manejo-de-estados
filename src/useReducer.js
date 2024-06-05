@@ -9,7 +9,7 @@ const initialState = {
 
 // }
 
-// const reducer = (state, action) => {
+// const reducerIf = (state, action) => {
 //     if (action.type === 'ERROR') {
 //         return {
 //             ...state,
@@ -47,7 +47,6 @@ const initialState = {
 //                 ...state
 //             }
 //     }
-
 // }
 
 const reducerObject = (state) => ({
